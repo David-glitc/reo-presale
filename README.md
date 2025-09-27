@@ -26,8 +26,14 @@ npm run test
 # Start local blockchain
 npm run node
 
-# Deploy contracts
+# Deploy contracts (BSC Testnet - Recommended)
+npm run deploy:bsc
+
+# Deploy contracts (Local)
 npm run deploy
+
+# Deploy contracts (Sepolia)
+npm run deploy -- --network sepolia
 ```
 
 ## Contract Overview
@@ -123,18 +129,21 @@ npm run test
 
 ### Prerequisites
 1. **Node.js** and **npm/pnpm** installed
-2. **Ethereum wallet** with testnet ETH (Sepolia)
+2. **Ethereum wallet** with testnet BNB (BSC Testnet) or ETH (Sepolia)
 3. **Environment variables** configured
 
 ### Environment Setup
 Create a `.env` file in the project root:
 ```bash
-# Sepolia Testnet Configuration
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
+# BSC Testnet Configuration (Recommended)
+BSC_TESTNET_RPC_URL=https://bsc-testnet.publicnode.com
 PRIVATE_KEY=your_wallet_private_key_here
 
-# Optional: Etherscan API key for verification
+# Etherscan API Key (for verification on all networks)
 ETHERSCAN_API_KEY=your_etherscan_api_key
+
+# Sepolia Testnet Configuration (Alternative)
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
 ```
 
 
@@ -147,11 +156,56 @@ The deployment script uses these default values:
 - **Presale Allocation**: 100M ROE tokens
 - **Start Time**: Current time + 60 seconds
 
-### Deployed Contracts (Sepolia Testnet)
+### Deployed Contracts
+
+#### BSC Testnet (Recommended)
+- **ROEToken**: [`0xe03d177185B9986abDe5710FdE2a33575c3Cf29a`](https://testnet.bscscan.com/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code) ✅ **Verified**
+- **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://testnet.bscscan.com/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code) ⏳ **Pending Verification**
+
+#### Sepolia Testnet (Alternative)
 - **ROEToken**: [`0xe03d177185B9986abDe5710FdE2a33575c3Cf29a`](https://sepolia.etherscan.io/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code)
 - **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://sepolia.etherscan.io/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code)
 
 ### Verification Commands
+
+#### BSC Testnet (Recommended)
+```bash
+# Verify ROEToken
+npx hardhat verify --network bscTestnet 0xe03d177185B9986abDe5710FdE2a33575c3Cf29a
+
+# Verify ROEPresale (with constructor arguments)
+npx hardhat verify --network bscTestnet 0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1 \
+  "0xe03d177185B9986abDe5710FdE2a33575c3Cf29a" \
+  "1735731600" \
+  "100000000000000000000" \
+  "1000000000000000000000" \
+  "10000000000000000" \
+  "10000000000000000000" \
+  "100000000000000000000000000"
+
+# Or use the verification script
+npm run verify:bsc
+```
+
+**Note**: Now using Etherscan V2 API for verification. You only need one `ETHERSCAN_API_KEY` for all networks. Get your free API key from [Etherscan](https://etherscan.io/apis).
+
+#### Manual Verification on BSCScan
+If automatic verification fails, you can manually verify the contracts:
+
+1. **ROEToken**: Go to [BSCScan Testnet](https://testnet.bscscan.com/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code)
+   - Click "Contract" tab → "Verify and Publish"
+   - Select "Solidity (Single file)"
+   - Compiler: `v0.8.24+commit.e11b9ed9`
+   - License: `MIT`
+   - Paste the ROEToken contract code
+
+2. **ROEPresale**: Go to [BSCScan Testnet](https://testnet.bscscan.com/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code)
+   - Click "Contract" tab → "Verify and Publish"
+   - Select "Solidity (Standard JSON Input)"
+   - Upload the JSON file from `artifacts/build-info/`
+   - Constructor arguments: `["0xe03d177185B9986abDe5710FdE2a33575c3Cf29a","1735731600","100000000000000000000","1000000000000000000000","10000000000000000","10000000000000000000","100000000000000000000000000"]`
+
+#### Sepolia Testnet (Alternative)
 ```bash
 # Verify ROEToken
 npx hardhat verify --network sepolia 0xe03d177185B9986abDe5710FdE2a33575c3Cf29a
@@ -183,7 +237,8 @@ The contracts now use **Solidity 0.8.24** with optimizer enabled to resolve the 
 
 - **Hardhat**: Local development (chainId: 1337)
 - **Localhost**: Local blockchain (http://127.0.0.1:8545)
-- **Sepolia**: Ethereum testnet (recommended for testing)
+- **BSC Testnet**: Binance Smart Chain testnet (chainId: 97) - **Recommended**
+- **Sepolia**: Ethereum testnet (chainId: 11155111)
 
 ## License
 

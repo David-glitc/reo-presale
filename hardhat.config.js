@@ -1,7 +1,8 @@
-import "@nomicfoundation/hardhat-toolbox";
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
-export default {
+module.exports = {
     solidity: "0.8.24",
     networks: {
         hardhat: {
@@ -14,9 +15,34 @@ export default {
             url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
             accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
         },
+        bscTestnet: {
+            url: process.env.BSC_TESTNET_RPC_URL || "https://data-seed-prebsc-1-s1.binance.org:8545",
+            chainId: 97,
+            accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+        },
     },
     sourcify: {
         enabled: true,
+    },
+    etherscan: {
+        apiKey: process.env.ETHERSCAN_API_KEY || "",
+        customChains: [{
+                network: "bscTestnet",
+                chainId: 97,
+                urls: {
+                    apiURL: "https://api.etherscan.io/v2/api?chainid=97",
+                    browserURL: "https://testnet.bscscan.com"
+                }
+            },
+            {
+                network: "sepolia",
+                chainId: 11155111,
+                urls: {
+                    apiURL: "https://api.etherscan.io/v2/api?chainid=11155111",
+                    browserURL: "https://sepolia.etherscan.io"
+                }
+            }
+        ]
     },
     paths: {
         sources: "./contracts",
