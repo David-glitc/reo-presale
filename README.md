@@ -160,11 +160,11 @@ The deployment script uses these default values:
 
 #### BSC Testnet (Recommended)
 - **ROEToken**: [`0xe03d177185B9986abDe5710FdE2a33575c3Cf29a`](https://testnet.bscscan.com/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code) ✅ **Verified**
-- **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://testnet.bscscan.com/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code) ⏳ **Pending Verification**
+- **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://testnet.bscscan.com/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code) ✅ **Verified**
 
 #### Sepolia Testnet (Alternative)
-- **ROEToken**: [`0xe03d177185B9986abDe5710FdE2a33575c3Cf29a`](https://sepolia.etherscan.io/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code)
-- **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://sepolia.etherscan.io/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code)
+- **ROEToken**: [`0xe03d177185B9986abDe5710FdE2a33575c3Cf29a`](https://sepolia.etherscan.io/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code) ✅ **Verified**
+- **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://sepolia.etherscan.io/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code) ✅ **Verified**
 
 ### Verification Commands
 
