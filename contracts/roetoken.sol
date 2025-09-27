@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title ROEToken
- * @notice ERC20 token for the ROE Presale ecosystem.
- * @dev Mintable only by the presale contract (set via Ownable).
+ * @dev ERC20 token with pre-minted supply for presale transfers
  */
 contract ROEToken is ERC20, Ownable {
     address public presale;
+    uint256 public constant TOTAL_SUPPLY = 1_000_000_000 * 10**18; // 1B tokens
 
     modifier onlyPresale() {
         require(msg.sender == presale, "Not presale contract");
         _;
     }
 
-    constructor() ERC20("ROE Token", "ROE") Ownable() {}
+    constructor() ERC20("ROE Token", "ROE") Ownable() {
+        _mint(msg.sender, TOTAL_SUPPLY);
+    }
 
-    /// @notice One-time presale contract setter
     function setPresale(address _presale) external onlyOwner {
         require(_presale != address(0), "Invalid address");
         require(presale == address(0), "Presale already set");
         presale = _presale;
     }
 
-    /// @notice Mint tokens (called by presale on claim)
-    function mint(address to, uint256 amount) external onlyPresale {
-        _mint(to, amount);
+    function transferTokens(address to, uint256 amount) external onlyPresale {
+        _transfer(msg.sender, to, amount);
     }
 }

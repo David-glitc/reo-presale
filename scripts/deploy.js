@@ -4,26 +4,40 @@ async function main() {
     const [deployer] = await hre.ethers.getSigners();
     console.log("Deploying with:", deployer.address);
 
-    const ROEToken = await hre.ethers.getContractFactory("roetoken");
+    const ROEToken = await hre.ethers.getContractFactory("ROEToken");
     const token = await ROEToken.deploy();
-    await token.deployed();
-    console.log("ROEToken deployed to:", token.address);
+    await token.waitForDeployment();
+    console.log("ROEToken deployed to:", await token.getAddress());
 
-    const ROEPresale = await hre.ethers.getContractFactory("roepresale");
-    const now = Math.floor(Date.now() / 1000) + 60; // start in 1 min
+    const ROEPresale = await hre.ethers.getContractFactory("ROEPresale");
+    const now = Math.floor(Date.now() / 1000) + 60;
+
+    // Standardized values for better clarity
+    const SOFT_CAP = hre.ethers.parseEther("100");
+    const HARD_CAP = hre.ethers.parseEther("1000");
+    const MIN_CONTRIBUTION = hre.ethers.parseEther("0.01");
+    const MAX_CONTRIBUTION = hre.ethers.parseEther("10");
+    const PRESALE_ALLOCATION = hre.ethers.parseEther("100000000");
+
     const presale = await ROEPresale.deploy(
-        token.address,
-        hre.ethers.utils.parseEther("0.5"), // initial price
+        await token.getAddress(),
         now,
-        hre.ethers.utils.parseEther("100"), // softCap
-        hre.ethers.utils.parseEther("1000") // hardCap
+        SOFT_CAP,
+        HARD_CAP,
+        MIN_CONTRIBUTION,
+        MAX_CONTRIBUTION,
+        PRESALE_ALLOCATION
     );
-    await presale.deployed();
-    console.log("ROEPresale deployed to:", presale.address);
+    await presale.waitForDeployment();
+    console.log("ROEPresale deployed to:", await presale.getAddress());
 
     // Link token to presale
-    await token.setPresale(presale.address);
+    await token.setPresale(await presale.getAddress());
     console.log("Presale set as minter");
+
+    // Transfer presale allocation to presale contract
+    await token.transfer(await presale.getAddress(), PRESALE_ALLOCATION);
+    console.log("Transferred presale allocation to presale contract");
 }
 
 main().catch((error) => {
