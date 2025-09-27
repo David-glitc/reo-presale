@@ -45,38 +45,24 @@ The presale uses a dynamic pricing model:
 Each round lasts 24 hours, with a 3-day claim delay after presale completion.
 
 ## User Flow
-
 ```mermaid
 flowchart TD
     Start([Presale Starts]) --> CheckRound{Round Active?}
     CheckRound -->|Yes| Contribute[User Contributes ETH]
-    CheckRound -->|No| Wait[Wait for Next Round]
-    Wait --> CheckRound
+    CheckRound -->|No| Wait[Wait for Next Round] --> CheckRound
     
     Contribute --> Validate{Check Limits}
-    Validate -->|Pass| Update[Update Contribution]
-    Validate -->|Fail| Revert[Transaction Reverted]
+    Validate -->|Pass| Update[Update Contribution] --> Event[Emit TokensPurchased]
+    Validate -->|Fail| Revert[Revert Tx]
     
-    Update --> Event[Emit TokensPurchased Event]
     Event --> MoreRounds{More Rounds?}
-    MoreRounds -->|Yes| NextRound[Next Round Starts]
+    MoreRounds -->|Yes| NextRound[Next Round] --> CheckRound
     MoreRounds -->|No| PresaleEnd[Presale Ends]
     
-    NextRound --> CheckRound
     PresaleEnd --> SoftCap{Soft Cap Met?}
-    
-    SoftCap -->|Yes| ClaimPeriod[Claim Period Starts<br/>3 Days Delay]
-    SoftCap -->|No| RefundPeriod[Refund Period Starts]
-    
-    ClaimPeriod --> Claim[User Claims Tokens]
-    Claim --> Mint[Tokens Transferred to User]
-    
-    RefundPeriod --> Refund[User Requests Refund]
-    Refund --> Return[ETH Returned to User]
-    
-    Mint --> Complete([Presale Complete])
-    Return --> Complete
-    
+    SoftCap -->|Yes| ClaimPeriod[Claim Starts<br/>+3 Days] --> Claim[Claim Tokens] --> Mint[Transfer Tokens] --> Complete([Presale Complete])
+    SoftCap -->|No| RefundPeriod[Refund Starts] --> Refund[User Refund] --> Return[ETH Returned] --> Complete
+
     style Start fill:#e1f5fe
     style Complete fill:#c8e6c9
     style Contribute fill:#fff3e0
