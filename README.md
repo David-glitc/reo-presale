@@ -162,8 +162,35 @@ The deployment script uses these default values:
 - **Start Time**: Current time + 60 seconds
 
 ### Deployed Contracts (Sepolia Testnet)
-- **ROEToken**: [`0x354Ba770d2aA8c4C8aE32c872eA84A90263975fa`](https://sepolia.etherscan.io/address/0x354Ba770d2aA8c4C8aE32c872eA84A90263975fa#code)
-- **ROEPresale**: [`0xEDfa37c0f3a9Dff2db63B00B7cF6232ccd259D62`](https://sepolia.etherscan.io/address/0xEDfa37c0f3a9Dff2db63B00B7cF6232ccd259D62#code)
+- **ROEToken**: [`0xe03d177185B9986abDe5710FdE2a33575c3Cf29a`](https://sepolia.etherscan.io/address/0xe03d177185B9986abDe5710FdE2a33575c3Cf29a#code)
+- **ROEPresale**: [`0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1`](https://sepolia.etherscan.io/address/0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1#code)
+
+### Verification Commands
+```bash
+# Verify ROEToken
+npx hardhat verify --network sepolia 0xe03d177185B9986abDe5710FdE2a33575c3Cf29a
+
+# Verify ROEPresale (with constructor arguments)
+npx hardhat verify --network sepolia 0xf22751fB1FAC7e7b06824Cb7CBC85E03991DAAF1 \
+  "0xe03d177185B9986abDe5710FdE2a33575c3Cf29a" \
+  "1735731600" \
+  "100000000000000000000" \
+  "1000000000000000000000" \
+  "10000000000000000" \
+  "10000000000000000000" \
+  "100000000000000000000000000"
+
+# Or use the verification script
+npx hardhat run scripts/verify.js --network sepolia
+```
+
+### Compiler Warnings Resolution
+The contracts now use **Solidity 0.8.24** with optimizer enabled to resolve the low-severity compiler warnings:
+- ✅ **VerbatimInvalidDeduplication** - Fixed with updated compiler
+- ✅ **FullInlinerNonExpressionSplitArgumentEvaluationOrder** - Fixed with optimizer
+- ✅ **MissingSideEffectsOnSelectorAccess** - Fixed with compiler version
+
+**Note**: These were low-severity warnings and didn't affect contract functionality, but using the latest compiler version ensures optimal performance and security.
 
 
 ## Networks
